@@ -8,8 +8,9 @@
     <!-- If so, show form to post -->
     <div class="subdiv">
         <h3>New Post</h3>
-        <form>
-            <textarea class="form-control" id="post" rows="3"></textarea>
+        <form action="{% url 'index' %}" method="post">
+            {% csrf_token %}
+            <textarea class="form-control" name="posted" rows="3"></textarea>
             <p></p>
             <button type="submit" class="btn btn-primary mb-2">Post</button>
         </form>
@@ -21,6 +22,11 @@
         You must <a href="{% url 'login' %}">Log In</a> in order to post!
     </div>
     {% endif %}
+    <p></p>
+
+    <!-- Was there a new post? -->
+    POSTED: {{ posted }}
+
     <p></p>
 
     <!-- Dislaying all posts, one by one, unless there is none -->

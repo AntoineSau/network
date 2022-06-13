@@ -8,10 +8,21 @@ from .models import User, Post
 
 
 def index(request):
-    return render(request, "network/index.html", {
-        # Passing all posts from database (with latest first) to display them later
-        "posts": Post.objects.all().order_by('-id')
-    })
+    # Checking if user sent a post by POST method
+    if request.method == "POST":
+        posted = request.POST["posted"]
+        return render(request, "network/index.html", {
+            # Passing all posts from database (with latest first) to display them later
+            "posts": Post.objects.all().order_by('-id'),
+            "posted": posted
+        })
+
+
+    else:    
+        return render(request, "network/index.html", {
+            # Passing all posts from database (with latest first) to display them later
+            "posts": Post.objects.all().order_by('-id')
+        })
 
 
 def login_view(request):

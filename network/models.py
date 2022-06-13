@@ -6,4 +6,4 @@ class User(AbstractUser):
     pass
 
     def __str__(self):
-        return f"User number '{self.id}' is '{self.username}'. Joined: {self.date_joined}. Last connexion: {self.last_login}."
+        return f"User number '{self.id}' is '{self.username}'. Last connexion: {self.last_login}."

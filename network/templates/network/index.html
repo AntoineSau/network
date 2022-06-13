@@ -1,5 +1,29 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    TODO / WIP
+    <p></p>
+    <h1>All Posts</h1>
+    <!-- Checking (as in layout) if user is logged in -->
+    {% if user.is_authenticated %}
+    <!-- If so, show form to post -->
+    <div class="subdiv">
+        <h3>New Post</h3>
+        <form>
+            <textarea class="form-control" id="post" rows="3"></textarea>
+            <button type="submit" class="btn btn-primary mb-2">Post</button>
+        </form>
+
+    </div>
+    <!-- If not, we don´t give the possibility to post anything-->
+    {% else %}
+    <div>
+        You must <a href="{% url 'login' %}">Log In</a> in order to post!
+    </div>
+    {% endif %}
+    <p></p>
+
+    <div>
+        Block for existing posts - TODO
+    </div>
+
 {% endblock %}

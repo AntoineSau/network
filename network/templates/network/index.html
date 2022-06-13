@@ -10,6 +10,7 @@
         <h3>New Post</h3>
         <form>
             <textarea class="form-control" id="post" rows="3"></textarea>
+            <p></p>
             <button type="submit" class="btn btn-primary mb-2">Post</button>
         </form>
 
@@ -22,8 +23,26 @@
     {% endif %}
     <p></p>
 
-    <div>
-        Block for existing posts - TODO
+    <!-- Dislaying all posts, one by one, unless there is none -->
+    {% for post in posts %}
+    <div class="subdiv">
+        <b>Posted by:</b> {{ post.userid.username }}
+        <br>
+        <b>Post:</b> {{ post.post }}
+        <br>
+        <b>Date:</b> {{ post.datetime.date }}
+        <br>
+        <b>Time:</b> {{ post.datetime.time }}
+        <br>
+        <b>Likes:</b> {{ post.likes }}
+        <br>
+        Comment
+        <br>
     </div>
+    <p></p>
+    {% empty %}
+        We haven't found any post!
+    {% endfor %}
+    
 
 {% endblock %}

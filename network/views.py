@@ -4,11 +4,14 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from .models import User, Post
 
 
 def index(request):
-    return render(request, "network/index.html")
+    return render(request, "network/index.html", {
+        # Passing all posts from database (with latest first) to display them later
+        "posts": Post.objects.all().order_by('-id')
+    })
 
 
 def login_view(request):

@@ -90,3 +90,18 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
+
+def profile_page(request, username):
+    
+    # Is this user registred in oru database? 
+    # TODO
+
+    # If so, dispaly this users, data
+    user_profiled = User.objects.filter(username=username)
+
+
+    return render(request, "network/profile.html", {
+                "username": username,
+                "user_profiled": user_profiled
+            })
+

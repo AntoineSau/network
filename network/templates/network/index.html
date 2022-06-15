@@ -10,7 +10,7 @@
         <h3>New Post</h3>
         <form action="{% url 'index' %}" method="post">
             {% csrf_token %}
-            <textarea class="form-control" name="posted" rows="3"></textarea>
+            <textarea class="form-control" name="posted" rows="3" required></textarea >
             <p></p>
             <button type="submit" class="btn btn-primary mb-2">Post</button>
         </form>
@@ -24,8 +24,10 @@
     {% endif %}
     <p></p>
 
-    <!-- Was there a new post? -->
+    <!-- Was there a new post? 
+        Check print only :)
     POSTED: {{ posted }} // User = {{ user.id }}
+    -->
 
     <p></p>
 

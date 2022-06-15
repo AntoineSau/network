@@ -1,0 +1,15 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+    
+    <!-- If users exists, show user's data-->
+    {% if user_profiled %}
+        <h1>{{ username }}'s profile</h1>
+        Users data: {{ user_profiled }}
+    <!-- If ther eis no such user, dispaly error message-->
+    {% else %}
+        <h1>Error: "{{ username }}"'s username didn't return any result.</h1>
+        We were unable to find this user, sorry!
+    {% endif %}  
+
+{% endblock %}

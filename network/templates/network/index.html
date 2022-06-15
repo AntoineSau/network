@@ -34,7 +34,7 @@
     <!-- Dislaying all posts, one by one, unless there is none -->
     {% for post in posts %}
     <div class="subdiv">
-        <b>Posted by:</b> {{ post.userid.username }}
+        <b>Posted by:</b> <a href="{% url 'profile_page' post.userid.username %}">{{ post.userid.username }}</a>
         <br>
         <b>Post:</b> {{ post.post }}
         <br>

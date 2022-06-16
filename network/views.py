@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from datetime import datetime
 
-from .models import User, Post
+from .models import User, Post, Follower
 
 
 def index(request):
@@ -105,10 +105,18 @@ def profile_page(request, username):
         # Get this user's posts
         user_posts = Post.objects.filter(userid=user_profiled_id).order_by('-id')
 
+        # Count the amount of followers for this user
+        amount_of_followers = Follower.objects.filter(followed=user_profiled_id).count()
+
+        # Count how many people this user is following
+        amount_of_following = Follower.objects.filter(follower=user_profiled_id).count()
+
         return render(request, "network/profile.html", {
                     "username": username,
                     "user_profiled": user_profiled,
                     "user_profiled_id": user_profiled_id,
+                    "amount_of_followers": amount_of_followers,
+                    "amount_of_following": amount_of_following,
                     "user_posts": user_posts
                 })
 

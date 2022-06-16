@@ -1,3 +1,4 @@
+from tkinter import CASCADE
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from datetime import datetime
@@ -17,3 +18,10 @@ class Post(models.Model):
 
     def __str__(self):
         return f"POST NUMBER '{self.id}'. BY USER '{self.userid.username}'. CONTENT '{self.post}'. LIKES: '{self.likes}'. PUBLISHED: '{self.datetime}'."
+
+class Follower(models.Model):
+    follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_following")
+    followed = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_followed")
+
+    def __str__(self):
+        return f"{self.follower.username} (user:{self.follower.id}) FOLLOWS {self.followed.username} (user:{self.followed.id}) "

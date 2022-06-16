@@ -92,16 +92,29 @@ def register(request):
         return render(request, "network/register.html")
 
 def profile_page(request, username):
+
+    # TODO try!!!!!!!
     
-    # Is this user registred in oru database? 
-    # TODO
+    # Does the user exist?
+    try: 
+        user_profiled = User.objects.filter(username=username)
 
-    # If so, dispaly this users, data
-    user_profiled = User.objects.filter(username=username)
+        user_profiled_id = user_profiled.values_list('id', flat=True)
+        user_profiled_id = user_profiled_id[0]
 
+        # Get this user's posts
+        user_posts = Post.objects.filter(userid=user_profiled_id).order_by('-id')
 
-    return render(request, "network/profile.html", {
-                "username": username,
-                "user_profiled": user_profiled
-            })
+        return render(request, "network/profile.html", {
+                    "username": username,
+                    "user_profiled": user_profiled,
+                    "user_profiled_id": user_profiled_id,
+                    "user_posts": user_posts
+                })
+
+    # If not, display page without posts
+    except IndexError:
+        return render(request, "network/missingprofile.html", {
+                    "username": username,
+                })
 

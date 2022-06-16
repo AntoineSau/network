@@ -2,14 +2,45 @@
 
 {% block body %}
     
-    <!-- If users exists, show user's data-->
-    {% if user_profiled %}
-        <h1>{{ username }}'s profile</h1>
-        Users data: {{ user_profiled }}
-    <!-- If ther eis no such user, dispaly error message-->
-    {% else %}
-        <h1>Error: "{{ username }}"'s username didn't return any result.</h1>
-        We were unable to find this user, sorry!
-    {% endif %}  
+    <!-- Displaying users' data -->
+    <h1>{{ username }}'s profile</h1>
+    <!-- TEST ONLY -> User's data: {{ user_profiled }}
+    <br> -->
+    TEST ONLY -> User's ID = {{ user_profiled_id }}
+    <br>
+    <b>Followers</b>: TODO
+    <br>
+    <b>Following</b>: TODO
+    <br>
+    Follow / unfollow TODO
+    <p></p>
+    <!-- Display all of the posts for that user, in reverse chronological order -->
+    <b>See all posts from <i>{{ username }}</i>:</b>
+    <p></p>
+    {% for user_post in user_posts %}
+        <div class="subdiv">
+            <b>Posted by:</b> <a href="{% url 'profile_page' user_post.userid.username %}">{{ user_post.userid.username }}</a>
+            <br>
+            <b>Post:</b> {{ user_post.post }}
+            <br>
+            <b>Date:</b> {{ user_post.datetime.date }}
+            <br>
+            <b>Time:</b> {{ user_post.datetime.time }}
+            <br>
+            <b>Likes:</b> {{ user_post.likes }}
+            <br>
+            Comment
+            <br>
+        </div>
+        <p></p>
+    <!-- If user hasn´t published yet, show message -->
+    {% empty %}
+        <i>{{ username }}</i> hasn't published any post, yet.
+    {% endfor %}
+
+    <!-- Check print for user id only <br>
+    user_profiled_id -> {{ user_profiled_id }}
+    -->
+     
 
 {% endblock %}

@@ -93,44 +93,162 @@ def register(request):
 
 def profile_page(request, username):
 
-    # TODO try!!!!!!!
-    
-    # Does the user exist?
-    try: 
-        user_profiled = User.objects.filter(username=username)
+    # Check if the users wants to follow or unfollow / post_request
+    if request.method == "POST":
+        if 'follow' in request.POST:
+            
+            # Same as get method 
+            # Does the user exist?
+            try: 
+                user_profiled = User.objects.filter(username=username)
 
-        user_profiled_id = user_profiled.values_list('id', flat=True)
-        user_profiled_id = user_profiled_id[0]
+                user_profiled_id = user_profiled.values_list('id', flat=True)
+                user_profiled_id = user_profiled_id[0]
 
-        # Get this user's posts
-        user_posts = Post.objects.filter(userid=user_profiled_id).order_by('-id')
+                # Get this user's posts
+                user_posts = Post.objects.filter(userid=user_profiled_id).order_by('-id')
 
-        # Count the amount of followers for this user
-        amount_of_followers = Follower.objects.filter(followed=user_profiled_id).count()
+                # Count the amount of followers for this user
+                amount_of_followers = Follower.objects.filter(followed=user_profiled_id).count()
 
-        # Count how many people this user is following
-        amount_of_following = Follower.objects.filter(follower=user_profiled_id).count()
+                # Count how many people this user is following
+                amount_of_following = Follower.objects.filter(follower=user_profiled_id).count()
 
-        # Checking the name of who is logged in
-        user_logged_in = request.user.id
+                # Checking the name of who is logged in
+                user_logged_in = request.user.id
 
-        # Checking if user_logged_in is following user in profile
-        isfollowing = Follower.objects.filter(followed=user_profiled_id ,follower=user_logged_in).count()
+                # Checking if user_logged_in is following user in profile
+                isfollowing = Follower.objects.filter(followed=user_profiled_id,follower=user_logged_in).count()
 
-        return render(request, "network/profile.html", {
-                    "username": username,
-                    "user_profiled": user_profiled,
-                    "user_profiled_id": user_profiled_id,
-                    "amount_of_followers": amount_of_followers,
-                    "amount_of_following": amount_of_following,
-                    "user_logged_in": user_logged_in,
-                    "isfollowing": isfollowing,
-                    "user_posts": user_posts
-                })
+                # ADD ENTRY To FOLLOWER MODEL
+                followed = User.objects.filter(id=user_profiled_id)
+                followed = followed[0]
+                follower = User.objects.filter(id=user_logged_in)
+                follower = follower[0]
+                follow = Follower(followed=followed,follower=follower)
+                follow.save()
+                
 
-    # If not, display page without posts
-    except IndexError:
-        return render(request, "network/missingprofile.html", {
-                    "username": username,
-                })
+                # Reload Followers after the change in Model
+                amount_of_followers = Follower.objects.filter(followed=user_profiled_id).count()
+                amount_of_following = Follower.objects.filter(follower=user_profiled_id).count()
+                isfollowing = Follower.objects.filter(followed=user_profiled_id,follower=user_logged_in).count()
+
+
+                return render(request, "network/profile.html", {
+                            "username": username,
+                            "user_profiled": user_profiled,
+                            "user_profiled_id": user_profiled_id,
+                            "amount_of_followers": amount_of_followers,
+                            "amount_of_following": amount_of_following,
+                            "user_logged_in": user_logged_in,
+                            "isfollowing": isfollowing,
+                            "user_posts": user_posts,
+                            "post_request": "follow",
+                        })
+
+            # If not, display page without posts
+            except IndexError:
+                return render(request, "network/missingprofile.html", {
+                            "username": username,
+                        })
+
+        elif 'unfollow' in request.POST:
+            
+            # Same as get method
+            # Does the user exist?
+            try: 
+                user_profiled = User.objects.filter(username=username)
+
+                user_profiled_id = user_profiled.values_list('id', flat=True)
+                user_profiled_id = user_profiled_id[0]
+
+                # Get this user's posts
+                user_posts = Post.objects.filter(userid=user_profiled_id).order_by('-id')
+
+                # Count the amount of followers for this user
+                amount_of_followers = Follower.objects.filter(followed=user_profiled_id).count()
+
+                # Count how many people this user is following
+                amount_of_following = Follower.objects.filter(follower=user_profiled_id).count()
+
+                # Checking the name of who is logged in
+                user_logged_in = request.user.id
+                user_logged_in = int(user_logged_in)
+
+                # Checking if user_logged_in is following user in profile
+                isfollowing = Follower.objects.filter(followed=user_profiled_id,follower=user_logged_in).count()
+
+                # DELETE ENTRY FROM FOLLOWER MODEL
+                followed = User.objects.filter(id=user_profiled_id)
+                followed = followed[0]
+                follower = User.objects.filter(id=user_logged_in)
+                follower = follower[0]
+                follow = Follower.objects.filter(followed=followed,follower=follower)
+                follow.delete()
+
+                # Reload Followers after the change in Model
+                amount_of_followers = Follower.objects.filter(followed=user_profiled_id).count()
+                amount_of_following = Follower.objects.filter(follower=user_profiled_id).count()
+                isfollowing = Follower.objects.filter(followed=user_profiled_id,follower=user_logged_in).count()
+
+                return render(request, "network/profile.html", {
+                            "username": username,
+                            "user_profiled": user_profiled,
+                            "user_profiled_id": user_profiled_id,
+                            "amount_of_followers": amount_of_followers,
+                            "amount_of_following": amount_of_following,
+                            "user_logged_in": user_logged_in,
+                            "isfollowing": isfollowing,
+                            "user_posts": user_posts,
+                            "post_request": "unfollow",
+                        })
+
+            # If not, display page without posts
+            except IndexError:
+                return render(request, "network/missingprofile.html", {
+                            "username": username,
+                        })
+
+
+    # GET method:
+    else:
+        # Does the user exist?
+        try: 
+            user_profiled = User.objects.filter(username=username)
+
+            user_profiled_id = user_profiled.values_list('id', flat=True)
+            user_profiled_id = user_profiled_id[0]
+
+            # Get this user's posts
+            user_posts = Post.objects.filter(userid=user_profiled_id).order_by('-id')
+
+            # Count the amount of followers for this user
+            amount_of_followers = Follower.objects.filter(followed=user_profiled_id).count()
+
+            # Count how many people this user is following
+            amount_of_following = Follower.objects.filter(follower=user_profiled_id).count()
+
+            # Checking the name of who is logged in
+            user_logged_in = request.user.id
+
+            # Checking if user_logged_in is following user in profile
+            isfollowing = Follower.objects.filter(followed=user_profiled_id,follower=user_logged_in).count()
+
+            return render(request, "network/profile.html", {
+                        "username": username,
+                        "user_profiled": user_profiled,
+                        "user_profiled_id": user_profiled_id,
+                        "amount_of_followers": amount_of_followers,
+                        "amount_of_following": amount_of_following,
+                        "user_logged_in": user_logged_in,
+                        "isfollowing": isfollowing,
+                        "user_posts": user_posts
+                    })
+
+        # If not, display page without posts
+        except IndexError:
+            return render(request, "network/missingprofile.html", {
+                        "username": username,
+                    })
 

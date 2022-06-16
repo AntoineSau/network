@@ -2,6 +2,9 @@
 
 {% block body %}
     
+    <!-- Test post request-->
+    POST request = {{ post_request }}
+
     <!-- Displaying users' data -->
     <h1>{{ username }}'s profile</h1>
     
@@ -13,7 +16,7 @@
 
     <!-- TEST ONLY -> User's data: {{ user_profiled }}
     <br> -->
-    TEST ONLY -> User Profile's = {{ username }}
+    TEST ONLY -> User Profile's = {{ user_profiled_id }}
     <br>
     Users currently logged in -> user_logged_in: {{ user_logged_in }}
     <p></p>
@@ -36,13 +39,25 @@
         {% if not user_logged_in %}
             You need to <a href="{% url 'login' %}">Log In</a> in order to follow or unfollow other users!
             <p></p>
-        <!-- If user if following profile, allow to unfollow -->
+        <!-- If user if following profile, allow to unfollow and POST the answer-->
         {% elif isfollowing == 1 %}
-            <button class="btn btn-primary mb-2">Unfollow</button>
+
+            <form action="{% url 'profile_page' username %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="unfollow">
+                <button class="btn btn-danger mb-2">Unfollow</button>
+
+            </form>
+
             <p></p>
-        <!-- ELSE, if user if NOT following profile, allow to follow -->
+
+        <!-- ELSE, if user if NOT following profile, allow to follow and POST the answer -->
         {% else %}
-            <button class="btn btn-primary mb-2">Follow</button>
+            <form action="{% url 'profile_page' username %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="follow">
+                <button class="btn btn-primary mb-2">Follow</button>
+            </form>
             <p></p>
         {% endif %}
 

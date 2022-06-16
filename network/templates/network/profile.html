@@ -4,17 +4,50 @@
     
     <!-- Displaying users' data -->
     <h1>{{ username }}'s profile</h1>
-    <!-- TEST ONLY -> User's data: {{ user_profiled }}
-    <br> -->
-    TEST ONLY -> User's ID = {{ user_profiled_id }}
-    <br>
-    <!-- Dispalying data fROm Follower Model -->
+    
+    <!-- Dispalying data from Follower Model -->
     <b>Followers</b>: {{ amount_of_followers }}
     <br>
     <b>Following</b>: {{ amount_of_following }}
-    <br>
-    Follow / unfollow TODO
     <p></p>
+
+    <!-- TEST ONLY -> User's data: {{ user_profiled }}
+    <br> -->
+    TEST ONLY -> User Profile's = {{ username }}
+    <br>
+    Users currently logged in -> user_logged_in: {{ user_logged_in }}
+    <p></p>
+    <!-- If user is looking at his/her profile, no posisibility to follow or unfollow -->
+
+    {% if username == user.username %}
+        <i>This is your own profile, you cannot follow or unfollow yourself :)</i>
+        <p>
+
+        </p>
+    <!-- Else, check if logged in user is following this user profile -->
+    {% else %}
+
+        <!-- Test print only 
+        isfollowing -> {{ isfollowing}}
+        -->
+        <p></p>
+        
+        <!-- If no one is signed in, need to login - impossible to follow / unfollow -->
+        {% if not user_logged_in %}
+            You need to <a href="{% url 'login' %}">Log In</a> in order to follow or unfollow other users!
+            <p></p>
+        <!-- If user if following profile, allow to unfollow -->
+        {% elif isfollowing == 1 %}
+            <button class="btn btn-primary mb-2">Unfollow</button>
+            <p></p>
+        <!-- ELSE, if user if NOT following profile, allow to follow -->
+        {% else %}
+            <button class="btn btn-primary mb-2">Follow</button>
+            <p></p>
+        {% endif %}
+
+    {% endif %}
+
     <!-- Display all of the posts for that user, in reverse chronological order -->
     <b>See all posts from <i>{{ username }}</i>:</b>
     <p></p>

@@ -111,12 +111,20 @@ def profile_page(request, username):
         # Count how many people this user is following
         amount_of_following = Follower.objects.filter(follower=user_profiled_id).count()
 
+        # Checking the name of who is logged in
+        user_logged_in = request.user.id
+
+        # Checking if user_logged_in is following user in profile
+        isfollowing = Follower.objects.filter(followed=user_profiled_id ,follower=user_logged_in).count()
+
         return render(request, "network/profile.html", {
                     "username": username,
                     "user_profiled": user_profiled,
                     "user_profiled_id": user_profiled_id,
                     "amount_of_followers": amount_of_followers,
                     "amount_of_following": amount_of_following,
+                    "user_logged_in": user_logged_in,
+                    "isfollowing": isfollowing,
                     "user_posts": user_posts
                 })
 

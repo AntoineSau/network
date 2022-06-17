@@ -2,34 +2,16 @@
 
 {% block body %}
     <p></p>
-    <h1>All Posts</h1>
-    <!-- Checking (as in layout) if user is logged in -->
-    {% if user.is_authenticated %}
-    <!-- If so, show form to post -->
-    <div class="subdiv">
-        <h3>New Post</h3>
-        <form action="{% url 'index' %}" method="post">
-            {% csrf_token %}
-            <textarea class="form-control" name="posted" rows="3" required></textarea >
-            <p></p>
-            <button type="submit" class="btn btn-primary mb-2">Post</button>
-        </form>
-
-    </div>
-    <!-- If not, we don´t give the possibility to post anything-->
-    {% else %}
-    <div>
-        You must <a href="{% url 'login' %}">Log In</a> in order to post!
-    </div>
-    {% endif %}
+    <h1>Following</h1>
+    
     <p></p>
-
-    <!-- Was there a new post? 
-        Check print only :)
-    POSTED: {{ posted }} // User = {{ user.id }}
+    <!-- Test Prints only
+    isfollowing -> {{ isfollowing }}
+    <p></p>
+    user_logged_in -> {{ user_logged_in }}
+    <p></p>
+    isfollowingids -> {{ isfollowingids }}
     -->
-
-    <p></p>
 
     <!-- Dislaying all posts, one by one, unless there is none -->
     {% for post in page_obj %}
@@ -46,17 +28,10 @@
         <br>
         Comment
         <br>
-        <!-- Give users the possibility to edit only THEIR POSTS-->
-        {% if post.userid.username == user.username %}
-            
-            <button class="btn btn-primary mb-2">Edit post / TODO</button>
-            
-        {% endif %}
-        
     </div>
     <p></p>
     {% empty %}
-        We haven't found any post, yet!
+        We haven't found any post in your "Following list".
         <p></p>
     {% endfor %}
 

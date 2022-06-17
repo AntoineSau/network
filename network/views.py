@@ -4,8 +4,13 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from datetime import datetime
+from django.contrib.auth.decorators import login_required
+
+# test Paginator
+from django.core.paginator import Paginator
 
 from .models import User, Post, Follower
+
 
 
 def index(request):
@@ -26,17 +31,35 @@ def index(request):
         newpost.save()
 
 
+        # PAGINATOR
+        posts = Post.objects.all().order_by('-id')
+        paginator = Paginator(posts, 10) # test Paginator with 10 per page
+
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+
         return render(request, "network/index.html", {
             # Passing all posts from database (with latest first) to display them later
-            "posts": Post.objects.all().order_by('-id'),
-            "posted": posted,
+            "posts": posts,
+            "page_obj": page_obj
         })
 
 
-    else:    
+    else:
+
+        # PAGINATOR
+        posts = Post.objects.all().order_by('-id')
+        paginator = Paginator(posts, 10) # test Paginator with 10 per page
+
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+
         return render(request, "network/index.html", {
             # Passing all posts from database (with latest first) to display them later
-            "posts": Post.objects.all().order_by('-id')
+            "posts": posts,
+            "page_obj": page_obj
         })
 
 
@@ -105,9 +128,12 @@ def profile_page(request, username):
                 user_profiled_id = user_profiled.values_list('id', flat=True)
                 user_profiled_id = user_profiled_id[0]
 
-                # Get this user's posts
+                # Get this user's posts WITH PAGINATOR
                 user_posts = Post.objects.filter(userid=user_profiled_id).order_by('-id')
-
+                paginator = Paginator(user_posts, 10) # test Paginator with 10 per page
+                page_number = request.GET.get('page')
+                page_obj = paginator.get_page(page_number)
+            
                 # Count the amount of followers for this user
                 amount_of_followers = Follower.objects.filter(followed=user_profiled_id).count()
 
@@ -128,12 +154,10 @@ def profile_page(request, username):
                 follow = Follower(followed=followed,follower=follower)
                 follow.save()
                 
-
                 # Reload Followers after the change in Model
                 amount_of_followers = Follower.objects.filter(followed=user_profiled_id).count()
                 amount_of_following = Follower.objects.filter(follower=user_profiled_id).count()
                 isfollowing = Follower.objects.filter(followed=user_profiled_id,follower=user_logged_in).count()
-
 
                 return render(request, "network/profile.html", {
                             "username": username,
@@ -145,6 +169,7 @@ def profile_page(request, username):
                             "isfollowing": isfollowing,
                             "user_posts": user_posts,
                             "post_request": "follow",
+                            "page_obj": page_obj
                         })
 
             # If not, display page without posts
@@ -163,8 +188,11 @@ def profile_page(request, username):
                 user_profiled_id = user_profiled.values_list('id', flat=True)
                 user_profiled_id = user_profiled_id[0]
 
-                # Get this user's posts
+                # Get this user's posts WITH PAGINATOR
                 user_posts = Post.objects.filter(userid=user_profiled_id).order_by('-id')
+                paginator = Paginator(user_posts, 10) # test Paginator with 10 per page
+                page_number = request.GET.get('page')
+                page_obj = paginator.get_page(page_number)
 
                 # Count the amount of followers for this user
                 amount_of_followers = Follower.objects.filter(followed=user_profiled_id).count()
@@ -202,6 +230,7 @@ def profile_page(request, username):
                             "isfollowing": isfollowing,
                             "user_posts": user_posts,
                             "post_request": "unfollow",
+                            "page_obj": page_obj
                         })
 
             # If not, display page without posts
@@ -220,8 +249,11 @@ def profile_page(request, username):
             user_profiled_id = user_profiled.values_list('id', flat=True)
             user_profiled_id = user_profiled_id[0]
 
-            # Get this user's posts
+            # Get this user's posts WITH PAGINATOR
             user_posts = Post.objects.filter(userid=user_profiled_id).order_by('-id')
+            paginator = Paginator(user_posts, 10) # test Paginator with 10 per page
+            page_number = request.GET.get('page')
+            page_obj = paginator.get_page(page_number)
 
             # Count the amount of followers for this user
             amount_of_followers = Follower.objects.filter(followed=user_profiled_id).count()
@@ -243,7 +275,8 @@ def profile_page(request, username):
                         "amount_of_following": amount_of_following,
                         "user_logged_in": user_logged_in,
                         "isfollowing": isfollowing,
-                        "user_posts": user_posts
+                        "user_posts": user_posts,
+                        "page_obj": page_obj
                     })
 
         # If not, display page without posts
@@ -252,3 +285,31 @@ def profile_page(request, username):
                         "username": username,
                     })
 
+@login_required(login_url='login')
+def following(request):
+
+    # Checking the name of who is logged in
+    user_logged_in = request.user.id
+
+    # Check who this user is following:
+    isfollowing = Follower.objects.filter(follower=user_logged_in)
+    isfollowingids = Follower.objects.filter(follower=user_logged_in).values_list('followed',flat=True)
+
+    
+    # PAGINATOR
+    # Filter posts made only by people followed
+    posts = Post.objects.filter(userid__in=isfollowingids).order_by('-id')
+    paginator = Paginator(posts, 10) # test Paginator with 10 per page
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    
+    return render(request, "network/following.html", {
+       # Passing all posts from database (with latest first) to display them later
+        "posts": posts,
+        "isfollowing": isfollowing,
+        "isfollowingids": isfollowingids,
+        "user_logged_in": user_logged_in,
+        "page_obj": page_obj
+    })

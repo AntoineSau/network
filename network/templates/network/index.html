@@ -33,25 +33,28 @@
 
     <!-- Dislaying all posts, one by one, unless there is none -->
     {% for post in page_obj %}
-    <div class="subdiv">
+    <div id="{{post.post}}" class="subdiv">
         <b>Posted by:</b> <a href="{% url 'profile_page' post.userid.username %}">{{ post.userid.username }}</a>
-        <br>
-        <b>Post:</b> {{ post.post }}
-        <br>
+        <!-- Test of putting id to post so we can modify it later wiht its id-->
+        <div >
+            <b>Post:</b> {{ post.post }}
+        </div>
+        
         <b>Date:</b> {{ post.datetime.date }}
         <br>
         <b>Time:</b> {{ post.datetime.time }}
         <br>
-        <b>Likes:</b> {{ post.likes }}
+        <b>Likes:</b > {{ post.likes }}
         <br>
         Comment
         <br>
         <!-- Give users the possibility to edit only THEIR POSTS-->
         {% if post.userid.username == user.username %}
-            
-            <button class="btn btn-primary mb-2">Edit post / TODO</button>
-            
+                    
+            <button data-page="{{post.post}}" class="buttonedit btn btn-primary mb-2">Edit post / TODO</button>
+        
         {% endif %}
+        
         
     </div>
     <p></p>

@@ -33,10 +33,10 @@
 
     <!-- Dislaying all posts, one by one, unless there is none -->
     {% for post in page_obj %}
-    <div id="{{post.post}}" class="subdiv">
+    <div class="subdiv">
         <b>Posted by:</b> <a href="{% url 'profile_page' post.userid.username %}">{{ post.userid.username }}</a>
         <!-- Test of putting id to post so we can modify it later wiht its id-->
-        <div >
+        <div id="{{post.post}}" >
             <b>Post:</b> {{ post.post }}
         </div>
         
@@ -46,13 +46,15 @@
         <br>
         <b>Likes:</b > {{ post.likes }}
         <br>
+        PRINT post id is {{ post.id }}
+        <br>
         Comment
         <br>
-        <!-- Give users the possibility to edit only THEIR POSTS-->
+        <!-- Give users the possibility to edit only THEIR POSTS -->
         {% if post.userid.username == user.username %}
-                    
-            <button data-page="{{post.post}}" class="buttonedit btn btn-primary mb-2">Edit post / TODO</button>
-        
+            <div id="{{post.id}}">
+                <button  data-id="{{post.id}}" data-post="{{post.post}}" class="buttonedit btn btn-primary mb-2">Edit post</button>
+            </div>
         {% endif %}
         
         
@@ -64,24 +66,47 @@
     {% endfor %}
 
     <!-- Paginator from https://docs.djangoproject.com/en/4.0/topics/pagination/ -->
-    
-    <div class="pagination">
-        <span class="step-links">
-            {% if page_obj.has_previous %}
-                <a href="?page=1">&laquo; first</a>
-                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-            {% endif %}
-    
-            <span class="current">
-                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+    <nav aria-label="Page navigation example">
+
+        <div class="pagination justify-content-center pagination-lg">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+        
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+        
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
             </span>
-    
-            {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">next</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-            {% endif %}
-        </span>
-    </div>
+        </div>
+
+    </nav>
+
+    <!-- Test paginator bootstrap -->
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center pagination-lg"">
+          <li class="page-item">
+            <a class="page-link" href="#" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+          <li class="page-item"><a class="page-link" href="#">1</a></li>
+          <li class="page-item"><a class="page-link" href="#">2</a></li>
+          <li class="page-item"><a class="page-link" href="#">3</a></li>
+          <li class="page-item">
+            <a class="page-link" href="#" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
     
 
 {% endblock %}

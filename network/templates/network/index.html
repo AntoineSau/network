@@ -33,7 +33,8 @@
 
     <!-- Dislaying all posts, one by one, unless there is none -->
     {% for post in page_obj %}
-    <div class="subdiv">
+    <!-- DIV for post -->
+    <div id="{{post.id}}" class="subdiv">
         <b>Posted by:</b> <a href="{% url 'profile_page' post.userid.username %}">{{ post.userid.username }}</a>
         <!-- Test of putting id to post so we can modify it later wiht its id-->
         <div id="{{post.post}}" >
@@ -46,19 +47,30 @@
         <br>
         <b>Likes:</b > {{ post.likes }}
         <br>
+
+        <!-- If user doesn't LIKE the post, give option to like-->
+
+        <!-- Else, give possibility to unlike -->
+
+
+        TODO Like / Unlike
+        <br>
         PRINT post id is {{ post.id }}
         <br>
-        Comment
-        <br>
-        <!-- Give users the possibility to edit only THEIR POSTS -->
+        <!-- Give users the possibility to edit only THEIR POSTS passing in all data-->
         {% if post.userid.username == user.username %}
-            <div id="{{post.id}}">
-                <button  data-id="{{post.id}}" data-post="{{post.post}}" class="buttonedit btn btn-primary mb-2">Edit post</button>
+            <div>
+                <button data-id="{{post.id}}" data-post="{{post.post}}" 
+                data-postedby="{{post.userid.username}}" data-date="{{post.datetime.date}}"
+                data-time="{{post.datetime.time}}" data-likes="{{post.likes}}" 
+                class="buttonedit btn btn-primary mb-2">Edit post</button>
             </div>
         {% endif %}
-        
-        
+
     </div>
+
+
+    
     <p></p>
     {% empty %}
         We haven't found any post, yet!

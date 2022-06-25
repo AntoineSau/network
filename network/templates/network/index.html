@@ -52,7 +52,6 @@
 
         <!-- Else, give possibility to unlike -->
 
-
         TODO Like / Unlike
         <br>
         PRINT post id is {{ post.id }}
@@ -60,17 +59,14 @@
         <!-- Give users the possibility to edit only THEIR POSTS passing in all data-->
         {% if post.userid.username == user.username %}
             <div>
-                <button data-id="{{post.id}}" data-post="{{post.post}}" 
-                data-postedby="{{post.userid.username}}" data-date="{{post.datetime.date}}"
-                data-time="{{post.datetime.time}}" data-likes="{{post.likes}}" 
-                class="buttonedit btn btn-primary mb-2">Edit post</button>
+                <button id="button{{post.id}}" onclick="editpost({{post.id}})" class="buttonedit btn btn-primary mb-2">Edit post</button>
             </div>
         {% endif %}
 
     </div>
 
+    <!-- TODO id for button  wo chgne its innerHTML -->
 
-    
     <p></p>
     {% empty %}
         We haven't found any post, yet!

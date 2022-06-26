@@ -36,15 +36,12 @@
     <!-- DIV for post -->
     <div id="{{post.id}}" class="subdiv">
         <b>Posted by:</b> <a href="{% url 'profile_page' post.userid.username %}">{{ post.userid.username }}</a>
+        on {{ post.datetime.date }}
+        at {{ post.datetime.time }}.
         <!-- Test of putting id to post so we can modify it later wiht its id-->
-        <div id="{{post.post}}" >
-            <b>Post:</b> {{ post.post }}
-        </div>
-        
-        <b>Date:</b> {{ post.datetime.date }}
         <br>
-        <b>Time:</b> {{ post.datetime.time }}
-        <br>
+        <b>Post:</b>
+        <div id="post{{post.id}}">{{ post.post }}</div>
         <b>Likes:</b > {{ post.likes }}
         <br>
 
@@ -54,8 +51,8 @@
 
         TODO Like / Unlike
         <br>
-        PRINT post id is {{ post.id }}
-        <br>
+        <!-- Test PRINT post id is {{ post.id }}
+        <br> -->
         <!-- Give users the possibility to edit only THEIR POSTS passing in all data-->
         {% if post.userid.username == user.username %}
             <div>

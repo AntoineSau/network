@@ -15,13 +15,13 @@ function editpost(postid) {
     if (buttontochange.innerHTML === "Edit post") {
         // Backup buttontochange.innerHTML = `Save changes on button nº ${postid}`;
         buttontochange.innerHTML = 'Save changes';
-        buttontochange.className = "buttonedit btn btn-secondary mb-2";
+        buttontochange.className = "buttonedit btn btn-success mb-2";
         posttochange.innerHTML = `<textarea id="${postid}new">${postcontent}</textarea>`;
     
     // Give the user the possibility to edit their post and save it with JS
     } else {
         buttontochange.innerHTML = "Edit post";
-        buttontochange.className = "buttonedit btn btn-primary mb-2";
+        buttontochange.className = "buttonedit btn btn-light mb-2";
         // TODO Save new content in DB by fetch  
         let postchanged = document.getElementById(`${postid}new`);
         posttochange.innerHTML = postchanged.value;
@@ -56,6 +56,7 @@ function like(postid) {
 
         // TODO fetch / Update DB
         // POST MODEL : add 1 to the total amount of likes for this post
+
         // LIKE MODEL : add entry with this user liking this post
 
     } else {
@@ -65,7 +66,8 @@ function like(postid) {
 
         // TODO fetch / Update DB
         // POST MODEL : delete 1 to the total amount of likes for this post
-        /// LIKE MODEL : delete the exisitng entry with this user liking this post
+        
+        // LIKE MODEL : delete the exisitng entry with this user liking this post
 
     }
 

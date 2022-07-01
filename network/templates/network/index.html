@@ -12,7 +12,7 @@
             {% csrf_token %}
             <textarea class="form-control" name="posted" rows="3" required></textarea >
             <p></p>
-            <button type="submit" class="btn btn-primary mb-2">Post</button>
+            <button type="submit" class="btn btn-dark mb-2">Post</button>
         </form>
 
     </div>
@@ -45,9 +45,9 @@
         <b>Likes:</b > 
         <div id="likecount{{post.id}}">{{ post.likes }}</div>
 
-        <!-- List of pstos liekd by the user -->
-        Posts liked by user: {{postslikedbyuser}}
-        <br>
+        <!-- TEST PRINT ONLY List of pstos liked by the user
+        Posts liked by user: {{postslikedbyuser}}  -->
+        
         <!-- If user doesn't LIKE the post, give option to like-->
         <!-- Else, give possibility to unlike -->
         
@@ -62,7 +62,7 @@
         <!-- Give users the possibility to edit only THEIR POSTS passing in all data-->
         {% if post.userid.username == user.username %}
             <div>
-                <button id="button{{post.id}}" onclick="editpost({{post.id}})" class="buttonedit btn btn-primary mb-2">Edit post</button>
+                <button id="button{{post.id}}" onclick="editpost({{post.id}})" class="buttonedit btn btn-light mb-2">Edit post</button>
             </div>
         {% endif %}
 

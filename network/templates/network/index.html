@@ -42,14 +42,20 @@
         <br>
         <b>Post:</b>
         <div id="post{{post.id}}">{{ post.post }}</div>
-        <b>Likes:</b > {{ post.likes }}
+        <b>Likes:</b > 
+        <div id="likecount{{post.id}}">{{ post.likes }}</div>
+
+        <!-- List of pstos liekd by the user -->
+        Posts liked by user: {{postslikedbyuser}}
         <br>
-
         <!-- If user doesn't LIKE the post, give option to like-->
-
         <!-- Else, give possibility to unlike -->
-
-        TODO Like / Unlike
+        
+        {% if post.id in postslikedbyuser %}
+            <button id="buttonlike{{post.id}}" onclick="like({{post.id}})" class="buttonedit btn btn-secondary mb-2">Unlike Post</button>
+        {% else %}
+            <button id="buttonlike{{post.id}}" onclick="like({{post.id}})" class="buttonedit btn btn-primary mb-2">Like Post</button>
+        {% endif %}
         <br>
         <!-- Test PRINT post id is {{ post.id }}
         <br> -->
@@ -94,24 +100,7 @@
     </nav>
 
     <!-- Test paginator bootstrap -->
-    <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-center pagination-lg"">
-          <li class="page-item">
-            <a class="page-link" href="#" aria-label="Previous">
-              <span aria-hidden="true">&laquo;</span>
-            </a>
-          </li>
-          <li class="page-item"><a class="page-link" href="#">1</a></li>
-          <li class="page-item"><a class="page-link" href="#">2</a></li>
-          <li class="page-item"><a class="page-link" href="#">3</a></li>
-          <li class="page-item">
-            <a class="page-link" href="#" aria-label="Next">
-              <span aria-hidden="true">&raquo;</span>
-            </a>
-          </li>
-        </ul>
-      </nav>
-
+    
     
 
 {% endblock %}

@@ -1,10 +1,14 @@
+from typing import Iterable
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from datetime import datetime
 from django.contrib.auth.decorators import login_required
+import json
+from django.views.decorators.csrf import csrf_exempt
+
 
 # test Paginator
 from django.core.paginator import Paginator
@@ -14,6 +18,7 @@ from .models import User, Post, Follower, Like
 
 
 def index(request):
+    user = request.user
     # Checking if user sent a post by POST method
     if request.method == "POST":
         # Get what was posted by the user
@@ -55,13 +60,15 @@ def index(request):
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 
-        # Does the user like the post? + change in post and other pages
-
-
+        # TDL check with AnonymousUSer
+        postslikedbyuser = Like.objects.filter(likedby=user).values_list('postid', flat=True)
+        
+     
         return render(request, "network/index.html", {
             # Passing all posts from database (with latest first) to display them later
             "posts": posts,
-            "page_obj": page_obj
+            "page_obj": page_obj,
+            "postslikedbyuser": postslikedbyuser
         })
 
 
@@ -315,3 +322,24 @@ def following(request):
         "user_logged_in": user_logged_in,
         "page_obj": page_obj
     })
+
+@csrf_exempt
+@login_required
+def editpost(request, postid, postchangedvalue):
+    # Query for request post
+   
+    try:
+        post = Post.objects.get(userid=request.user, pk=postid)
+    except Post.DoesNotExist:
+        return JsonResponse({"error": "Post not found."}, status=404)
+
+    if request.method == 'PUT':
+        post.post = postchangedvalue
+        post.save()
+        return HttpResponse(status=204)
+    
+    else:
+        return JsonResponse({
+            "error": "Not allowed"
+        }, status=400)
+

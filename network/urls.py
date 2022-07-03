@@ -13,4 +13,7 @@ urlpatterns = [
     
     # API routes
     path("post/<int:postid>/<str:postchangedvalue>", views.editpost, name="editpost"),
+    path("addlike/<int:postid>", views.addlike, name="addlike"),
+    path("deletelike/<int:postid>", views.deletelike, name="deletelike"),
+
 ]

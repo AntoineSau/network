@@ -324,7 +324,7 @@ def following(request):
     })
 
 @csrf_exempt
-@login_required
+@login_required(login_url='login')
 def editpost(request, postid, postchangedvalue):
     # Query for request post
    
@@ -342,4 +342,46 @@ def editpost(request, postid, postchangedvalue):
         return JsonResponse({
             "error": "Not allowed"
         }, status=400)
+
+@csrf_exempt
+@login_required(login_url='login')
+def addlike(request, postid):
+    # Query for request post
+   
+    try:
+        post = Post.objects.get(userid=request.user, pk=postid)
+    except Post.DoesNotExist:
+        return JsonResponse({"error": "Post not found."}, status=404)
+
+    if request.method == 'PUT':
+        post.likes = post.likes + 1
+        post.save()
+        return HttpResponse(status=204)
+    
+    else:
+        return JsonResponse({
+            "error": "Not allowed"
+        }, status=400)
+
+@csrf_exempt
+@login_required(login_url='login')
+def deletelike(request, postid):
+    # Query for request post
+   
+    try:
+        post = Post.objects.get(userid=request.user, pk=postid)
+    except Post.DoesNotExist:
+        return JsonResponse({"error": "Post not found."}, status=404)
+
+    if request.method == 'PUT':
+        post.likes = post.likes - 1
+        post.save()
+        return HttpResponse(status=204)
+    
+    else:
+        return JsonResponse({
+            "error": "Not allowed"
+        }, status=400)
+
+
 

@@ -52,9 +52,9 @@
         <!-- Else, give possibility to unlike -->
         
         {% if post.id in postslikedbyuser %}
-            <button id="buttonlike{{post.id}}" onclick="like({{post.id}})" class="buttonedit btn btn-secondary mb-2">Unlike Post</button>
+            <button id="buttonlike{{post.id}}" onclick="deletelike({{post.id}})" class="buttonedit btn btn-secondary mb-2">Unlike Post</button>
         {% else %}
-            <button id="buttonlike{{post.id}}" onclick="like({{post.id}})" class="buttonedit btn btn-primary mb-2">Like Post</button>
+            <button id="buttonlike{{post.id}}" onclick="addlike({{post.id}})" class="buttonedit btn btn-primary mb-2">Like Post</button>
         {% endif %}
         <br>
         <!-- Test PRINT post id is {{ post.id }}

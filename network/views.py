@@ -356,6 +356,10 @@ def addlike(request, postid):
     if request.method == 'PUT':
         post.likes = post.likes + 1
         post.save()
+        # Query for entry in LIKE Model
+        likedentry = Like(likedby=request.user, postid_id=postid)
+        # Add entry to DB
+        likedentry.save()
         return HttpResponse(status=204)
     
     else:
@@ -376,12 +380,20 @@ def deletelike(request, postid):
     if request.method == 'PUT':
         post.likes = post.likes - 1
         post.save()
+        # Query for entry in LIKE Model
+        likedentry = Like.objects.get(likedby=request.user, postid=postid)
+        # Delete entry from DB
+        likedentry.delete()
         return HttpResponse(status=204)
     
     else:
         return JsonResponse({
             "error": "Not allowed"
         }, status=400)
+
+    
+    
+
 
 
 

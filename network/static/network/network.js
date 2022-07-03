@@ -54,7 +54,6 @@ function addlike(postid) {
         buttonlike.innerHTML = 'Unlike Post';
         buttonlike.className = "buttonedit btn btn-secondary mb-2";
 
-        // TODO fetch / Update DB
         // POST MODEL : add 1 to the total amount of likes for this post
         fetch(`/addlike/${postid}`, {
             method: 'PUT'            
@@ -63,6 +62,7 @@ function addlike(postid) {
             console.log(response);
         })
 
+        // TODO
         // LIKE MODEL : add entry with this user liking this post
 
     } else {
@@ -70,7 +70,6 @@ function addlike(postid) {
         buttonlike.innerHTML = 'Like Post';
         buttonlike.className = "buttonedit btn btn-primary mb-2";
 
-        // TODO fetch / Update DB
         // POST MODEL : delete 1 to the total amount of likes for this post
         fetch(`/deletelike/${postid}`, {
             method: 'PUT'            
@@ -78,6 +77,8 @@ function addlike(postid) {
         .then(response => {
             console.log(response);
         })
+
+        // TODO
         // LIKE MODEL : delete the existing entry with this user liking this post
 
     }
@@ -95,7 +96,6 @@ function deletelike(postid) {
         buttonlike.innerHTML = 'Unlike Post';
         buttonlike.className = "buttonedit btn btn-secondary mb-2";
 
-        // TODO fetch / Update DB
         // POST MODEL : add 1 to the total amount of likes for this post
         fetch(`/addlike/${postid}`, {
             method: 'PUT'            
@@ -104,6 +104,7 @@ function deletelike(postid) {
             console.log(response);
         })
 
+        // TODO
         // LIKE MODEL : add entry with this user liking this post
 
     } else {
@@ -111,7 +112,6 @@ function deletelike(postid) {
         buttonlike.innerHTML = 'Like Post';
         buttonlike.className = "buttonedit btn btn-primary mb-2";
 
-        // TODO fetch / Update DB
         // POST MODEL : delete 1 to the total amount of likes for this post
         fetch(`/deletelike/${postid}`, {
             method: 'PUT'            
@@ -119,6 +119,7 @@ function deletelike(postid) {
         .then(response => {
             console.log(response);
         })
+        // TODO
         // LIKE MODEL : delete the existing entry with this user liking this post
 
     }

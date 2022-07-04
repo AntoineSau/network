@@ -22,7 +22,6 @@ function editpost(postid) {
     } else {
         buttontochange.innerHTML = "Edit post";
         buttontochange.className = "buttonedit btn btn-light mb-2";
-        // TODO Save new content in DB by fetch  
         let postchanged = document.getElementById(`${postid}new`);
         posttochange.innerHTML = postchanged.value;
         postchangedvalue = postchanged.value
@@ -33,12 +32,12 @@ function editpost(postid) {
             method: 'PUT',
             body: JSON.stringify({
             "post": postchangedvalue
-            })
+            }),
+            
         })
         .then(response => {
             console.log(response);
         })
-
     
     }
 
@@ -62,9 +61,6 @@ function addlike(postid) {
             console.log(response);
         })
 
-        // TODO
-        // LIKE MODEL : add entry with this user liking this post
-
     } else {
         likecount.innerHTML = parseInt(likecount.innerHTML) - 1;
         buttonlike.innerHTML = 'Like Post';
@@ -78,12 +74,8 @@ function addlike(postid) {
             console.log(response);
         })
 
-        // TODO
-        // LIKE MODEL : delete the existing entry with this user liking this post
-
     }
 
-    
 }
 
 function deletelike(postid) {
@@ -104,8 +96,6 @@ function deletelike(postid) {
             console.log(response);
         })
 
-        // TODO
-        // LIKE MODEL : add entry with this user liking this post
 
     } else {
         likecount.innerHTML = parseInt(likecount.innerHTML) - 1;
@@ -119,8 +109,6 @@ function deletelike(postid) {
         .then(response => {
             console.log(response);
         })
-        // TODO
-        // LIKE MODEL : delete the existing entry with this user liking this post
 
     }
 

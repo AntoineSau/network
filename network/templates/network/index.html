@@ -8,7 +8,7 @@
     <!-- If so, show form to post -->
     <div class="subdiv">
         <h3>New Post</h3>
-        <form action="{% url 'index' %}" method="post">
+        <form action="{% url 'index' %}" method="post" >
             {% csrf_token %}
             <textarea class="form-control" name="posted" rows="3" required></textarea >
             <p></p>
@@ -50,11 +50,14 @@
         
         <!-- If user doesn't LIKE the post, give option to like-->
         <!-- Else, give possibility to unlike -->
-        
-        {% if post.id in postslikedbyuser %}
-            <button id="buttonlike{{post.id}}" onclick="deletelike({{post.id}})" class="buttonedit btn btn-secondary mb-2">Unlike Post</button>
+        {% if user.is_authenticated %}
+            {% if post.id in postslikedbyuser %}
+                <button id="buttonlike{{post.id}}" onclick="deletelike({{post.id}})" class="buttonedit btn btn-secondary mb-2">Unlike Post</button>
+            {% else %}
+                <button id="buttonlike{{post.id}}" onclick="addlike({{post.id}})" class="buttonedit btn btn-primary mb-2">Like Post</button>
+            {% endif %}
         {% else %}
-            <button id="buttonlike{{post.id}}" onclick="addlike({{post.id}})" class="buttonedit btn btn-primary mb-2">Like Post</button>
+            <i>You must be <a href="{% url 'login' %}">logged in</a> to like or unlike posts.</i>
         {% endif %}
         <br>
         <!-- Test PRINT post id is {{ post.id }}

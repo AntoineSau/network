@@ -43,11 +43,16 @@ def index(request):
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 
+        if request.user.is_authenticated:
+            postslikedbyuser = Like.objects.filter(likedby=user).values_list('postid', flat=True)
+        else:
+            postslikedbyuser = None
 
         return render(request, "network/index.html", {
             # Passing all posts from database (with latest first) to display them later
             "posts": posts,
-            "page_obj": page_obj
+            "page_obj": page_obj,
+            "postslikedbyuser": postslikedbyuser
         })
 
 
@@ -60,9 +65,11 @@ def index(request):
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 
-        # TDL check with AnonymousUSer
-        postslikedbyuser = Like.objects.filter(likedby=user).values_list('postid', flat=True)
-        
+       
+        if request.user.is_authenticated:
+            postslikedbyuser = Like.objects.filter(likedby=user).values_list('postid', flat=True)
+        else:
+            postslikedbyuser = None
      
         return render(request, "network/index.html", {
             # Passing all posts from database (with latest first) to display them later
@@ -168,6 +175,12 @@ def profile_page(request, username):
                 amount_of_following = Follower.objects.filter(follower=user_profiled_id).count()
                 isfollowing = Follower.objects.filter(followed=user_profiled_id,follower=user_logged_in).count()
 
+                user = request.user
+                if request.user.is_authenticated:
+                    postslikedbyuser = Like.objects.filter(likedby=user).values_list('postid', flat=True)
+                else:
+                    postslikedbyuser = None
+
                 return render(request, "network/profile.html", {
                             "username": username,
                             "user_profiled": user_profiled,
@@ -178,7 +191,9 @@ def profile_page(request, username):
                             "isfollowing": isfollowing,
                             "user_posts": user_posts,
                             "post_request": "follow",
-                            "page_obj": page_obj
+                            "page_obj": page_obj,
+                            "postslikedbyuser": postslikedbyuser
+                            
                         })
 
             # If not, display page without posts
@@ -229,6 +244,12 @@ def profile_page(request, username):
                 amount_of_following = Follower.objects.filter(follower=user_profiled_id).count()
                 isfollowing = Follower.objects.filter(followed=user_profiled_id,follower=user_logged_in).count()
 
+                user = request.user
+                if request.user.is_authenticated:
+                    postslikedbyuser = Like.objects.filter(likedby=user).values_list('postid', flat=True)
+                else:
+                    postslikedbyuser = None
+
                 return render(request, "network/profile.html", {
                             "username": username,
                             "user_profiled": user_profiled,
@@ -239,7 +260,8 @@ def profile_page(request, username):
                             "isfollowing": isfollowing,
                             "user_posts": user_posts,
                             "post_request": "unfollow",
-                            "page_obj": page_obj
+                            "page_obj": page_obj,
+                            "postslikedbyuser": postslikedbyuser
                         })
 
             # If not, display page without posts
@@ -276,6 +298,12 @@ def profile_page(request, username):
             # Checking if user_logged_in is following user in profile
             isfollowing = Follower.objects.filter(followed=user_profiled_id,follower=user_logged_in).count()
 
+            user = request.user
+            if request.user.is_authenticated:
+                postslikedbyuser = Like.objects.filter(likedby=user).values_list('postid', flat=True)
+            else:
+                postslikedbyuser = None
+
             return render(request, "network/profile.html", {
                         "username": username,
                         "user_profiled": user_profiled,
@@ -285,7 +313,8 @@ def profile_page(request, username):
                         "user_logged_in": user_logged_in,
                         "isfollowing": isfollowing,
                         "user_posts": user_posts,
-                        "page_obj": page_obj
+                        "page_obj": page_obj,
+                        "postslikedbyuser": postslikedbyuser
                     })
 
         # If not, display page without posts
@@ -313,6 +342,12 @@ def following(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
+    user = request.user
+    if request.user.is_authenticated:
+        postslikedbyuser = Like.objects.filter(likedby=user).values_list('postid', flat=True)
+    else:
+        postslikedbyuser = None
+
     
     return render(request, "network/following.html", {
        # Passing all posts from database (with latest first) to display them later
@@ -320,10 +355,10 @@ def following(request):
         "isfollowing": isfollowing,
         "isfollowingids": isfollowingids,
         "user_logged_in": user_logged_in,
-        "page_obj": page_obj
+        "page_obj": page_obj,
+        "postslikedbyuser": postslikedbyuser
     })
 
-@csrf_exempt
 @login_required(login_url='login')
 def editpost(request, postid, postchangedvalue):
     # Query for request post
@@ -349,7 +384,7 @@ def addlike(request, postid):
     # Query for request post
    
     try:
-        post = Post.objects.get(userid=request.user, pk=postid)
+        post = Post.objects.get(pk=postid)
     except Post.DoesNotExist:
         return JsonResponse({"error": "Post not found."}, status=404)
 
@@ -373,7 +408,7 @@ def deletelike(request, postid):
     # Query for request post
    
     try:
-        post = Post.objects.get(userid=request.user, pk=postid)
+        post = Post.objects.get(pk=postid)
     except Post.DoesNotExist:
         return JsonResponse({"error": "Post not found."}, status=404)
 

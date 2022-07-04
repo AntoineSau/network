@@ -15,23 +15,49 @@
 
     <!-- Dislaying all posts, one by one, unless there is none -->
     {% for post in page_obj %}
-    <div class="subdiv">
+    <!-- DIV for post -->
+    <div id="{{post.id}}" class="subdiv">
         <b>Posted by:</b> <a href="{% url 'profile_page' post.userid.username %}">{{ post.userid.username }}</a>
+        on {{ post.datetime.date }}
+        at {{ post.datetime.time }}.
+        <!-- Test of putting id to post so we can modify it later wiht its id-->
         <br>
-        <b>Post:</b> {{ post.post }}
+        <b>Post:</b>
+        <div id="post{{post.id}}">{{ post.post }}</div>
+        <b>Likes:</b > 
+        <div id="likecount{{post.id}}">{{ post.likes }}</div>
+
+        <!-- TEST PRINT ONLY List of pstos liked by the user
+        Posts liked by user: {{postslikedbyuser}}  -->
+        
+        <!-- If user doesn't LIKE the post, give option to like-->
+        <!-- Else, give possibility to unlike -->
+        {% if user.is_authenticated %}
+            {% if post.id in postslikedbyuser %}
+                <button id="buttonlike{{post.id}}" onclick="deletelike({{post.id}})" class="buttonedit btn btn-secondary mb-2">Unlike Post</button>
+            {% else %}
+                <button id="buttonlike{{post.id}}" onclick="addlike({{post.id}})" class="buttonedit btn btn-primary mb-2">Like Post</button>
+            {% endif %}
+        {% else %}
+            <i>You must be <a href="{% url 'login' %}">logged in</a> to like or unlike posts.</i>
+        {% endif %}
         <br>
-        <b>Date:</b> {{ post.datetime.date }}
-        <br>
-        <b>Time:</b> {{ post.datetime.time }}
-        <br>
-        <b>Likes:</b> {{ post.likes }}
-        <br>
-        Comment
-        <br>
+        <!-- Test PRINT post id is {{ post.id }}
+        <br> -->
+        <!-- Give users the possibility to edit only THEIR POSTS passing in all data-->
+        {% if post.userid.username == user.username %}
+            <div>
+                <button id="button{{post.id}}" onclick="editpost({{post.id}})" class="buttonedit btn btn-light mb-2">Edit post</button>
+            </div>
+        {% endif %}
+
     </div>
+
+    <!-- TODO id for button  wo chgne its innerHTML -->
+
     <p></p>
     {% empty %}
-        We haven't found any post in your "Following list".
+        We haven't found any post, yet!
         <p></p>
     {% endfor %}
 

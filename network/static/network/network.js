@@ -10,13 +10,16 @@ function editpost(postid) {
     let posttochange = document.getElementById(`post${postid}`);
     let postcontent = posttochange.innerHTML;
   
-    // If user clicks on "edit post", change the post to a text area prefileld with current post
+    // If user clicks on "edit post", change the post to a text area prefilled with current post
     
     if (buttontochange.innerHTML === "Edit post") {
         // Backup buttontochange.innerHTML = `Save changes on button nº ${postid}`;
         buttontochange.innerHTML = 'Save changes';
         buttontochange.className = "buttonedit btn btn-success mb-2";
         posttochange.innerHTML = `<textarea id="${postid}new">${postcontent}</textarea>`;
+
+        
+    
     
     // Give the user the possibility to edit their post and save it with JS
     } else {
@@ -26,14 +29,18 @@ function editpost(postid) {
         posttochange.innerHTML = postchanged.value;
         postchangedvalue = postchanged.value
 
-        // Update post content on database
-        // Test Fetch PUT form P3-mail --- post_id, newcontent
+        csrftoken = document.getElementsByName('csrfmiddlewaretoken')[0].value
+        
+
+        // Update post content on database with fetch
         fetch(`/post/${postid}/${postchangedvalue}`, {
             method: 'PUT',
             body: JSON.stringify({
             "post": postchangedvalue
             }),
-            
+            headers: { "X-CSRFToken": csrftoken },
+            credentials : 'same-origin',
+        
         })
         .then(response => {
             console.log(response);

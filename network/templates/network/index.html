@@ -35,6 +35,7 @@
     {% for post in page_obj %}
     <!-- DIV for post -->
     <div id="{{post.id}}" class="subdiv">
+        
         <b>Posted by:</b> <a href="{% url 'profile_page' post.userid.username %}">{{ post.userid.username }}</a>
         on {{ post.datetime.date }}
         at {{ post.datetime.time }}.
